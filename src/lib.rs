@@ -1,21 +1,17 @@
-const DFLT_BROKER:&str = "tcp://localhost:1883";
-const DFLT_CLIENT:&str = "rust_publish";
-const DFLT_TOPICS:&[&str] = &["rust/mqtt", "rust/test"];
+use std::{env, process, time::Duration};
+
+use paho_mqtt as mqtt;
+
+const DFLT_BROKER: &str = "tcp://localhost:1883";
+const DFLT_CLIENT: &str = "rust_publish";
+const DFLT_TOPICS: &[&str] = &["rust/mqtt", "rust/test"];
 // Define the qos.
-const QOS:i32 = 1;
+const QOS: i32 = 1;
 
 pub fn mqtt_publish(count: u16) {
-    use std::{
-        env,
-        process,
-        time::Duration
-    };
-
-    use paho_mqtt as mqtt;
-
-    let host = env::args().nth(1).unwrap_or_else(||
-        DFLT_BROKER.to_string()
-    );
+    let host = env::args()
+        .nth(1)
+        .unwrap_or_else(|| DFLT_BROKER.to_string());
 
     // Define the set of options for the create.
     // Use an ID for a persistent session.
@@ -45,7 +41,7 @@ pub fn mqtt_publish(count: u16) {
     // Create a message and publish it.
     // Publish message to 'test' and 'hello' topics.
     for num in 0..count {
-        let content =  "Hello world! ".to_string() + &num.to_string();
+        let content = "Hello world! ".to_string() + &num.to_string();
         let mut msg = mqtt::Message::new(DFLT_TOPICS[0], content.clone(), QOS);
         if num % 2 == 0 {
             println!("Publishing messages on the {:?} topic", DFLT_TOPICS[1]);
@@ -55,16 +51,14 @@ pub fn mqtt_publish(count: u16) {
         }
         let tok = cli.publish(msg);
 
-                if let Err(e) = tok {
-                        println!("Error sending message: {:?}", e);
-                        break;
-                }
+        if let Err(e) = tok {
+            println!("Error sending message: {:?}", e);
+            break;
+        }
     }
-
 
     // Disconnect from the broker.
     let tok = cli.disconnect(None);
     println!("Disconnect from the broker");
     tok.unwrap();
 }
- 
