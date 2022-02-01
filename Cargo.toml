@@ -9,7 +9,7 @@ edition = "2021"
 crate-type = ["dylib"]
 
 [dependencies]
-rumqttc = "*"
+paho-mqtt = { version = "*", default-features = false, features = ["bundled"] }
 
 [profile.release]
 #strip = true  # Automatically strip symbols from the binary.
