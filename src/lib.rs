@@ -1,11 +1,3 @@
-use std::{
-    env,
-    process,
-    time::Duration
-};
-
-extern crate paho_mqtt as mqtt;
-
 const DFLT_BROKER:&str = "tcp://localhost:1883";
 const DFLT_CLIENT:&str = "rust_publish";
 const DFLT_TOPICS:&[&str] = &["rust/mqtt", "rust/test"];
@@ -13,6 +5,14 @@ const DFLT_TOPICS:&[&str] = &["rust/mqtt", "rust/test"];
 const QOS:i32 = 1;
 
 pub fn mqtt_publish(count: u16) {
+    use std::{
+        env,
+        process,
+        time::Duration
+    };
+
+    use paho_mqtt as mqtt;
+
     let host = env::args().nth(1).unwrap_or_else(||
         DFLT_BROKER.to_string()
     );
